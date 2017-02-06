@@ -1,4 +1,4 @@
 # WebSciGroup6
 
-Adeel Minhas
-Ryan Mackenzie
+- Adeel Minhas
+- Ryan Mackenzie
