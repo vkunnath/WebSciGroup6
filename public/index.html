@@ -1,16 +1,104 @@
-<!doctype html>
+<!DOCTYPE html>
 
-<html lang="en">
+<!-- Initialize the app with ng-app directive -->
+
+<html ng-app="myApp">
+
 <head>
-  <meta charset="utf-8">
-
-  <title>Every Man for Himself</title>
-  <meta name="description" content="Every Man for Himself">
-  <meta name="author" content="Web Science Group 6">
-
+        <!-- these 3 meta tage are for Bootstrap -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Every Man For Himself</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.0/angular.js">
+    </script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
 </head>
 
-<body>
+<body ng-controller="mainController">
+
+
+<!-- When we click on a button, we set the view -->
+    <div class="panel">
+        <button type="button" ng-click="view=0">Home</button>
+        <button type="button" ng-click="view=1">Join Game</button>
+        <button type="button" ng-click="view=2">Create Game Page</button>
+        <button type="button" ng-click="view=3">About</button>
+    </div>
+
+
+    <div ng-show="view==0">
+        <div>
+            <p>Every Man For Himself</p>
+            <p>The Interactive multiplayer game where you can escape a killer, or be one</p>
+        </div>
+        <div>
+            <button type="button" ng-click="view=3">How to play</button>
+            <button type="button" ng-click="view=1">Join Game</button>
+            <button type="button" ng-click="view=2">Create Game</button>
+        </div>
+    </div>
+
+
+    <div ng-show="view==1">
+       <div>
+            <p>Every Man For Himself</p>
+       </div> 
+       <div>
+            <form action="">
+            Enter the room code:
+            <input type="text" name="code">
+            <br>
+            <br>
+            <input type="submit"value="Join Game">
+       </div>
+       <div>
+        <p>If you do not have a code, click  to create a new game</p>
+
+        </div>
+    </div>
+
+
+    <div ng-show="view==2">
+        <div> 
+            <p>Every Man For Himself</p>
+            <p>Create Game</p>
+        </div>
+        <div>
+            <form action="">
+            Enter number of players:
+            <input type="text" name="players">
+            <br>
+            Enter number of rounds:
+            <input type="text" name="rounds">
+            <br>
+            Enter number of traps:
+            <input type="text" name="traps">
+            <br>
+            <br>
+            <input type="submit"value="Create Game">
+        </form>
+        </div>
+
+    </div>
+
+    <div ng-show="view==3">
+        <div>“Every Man for Himself (EMH)” is a web-based multiplayer game where 4-8 players are pitted against each other in order to escape a dungeon. One player is the “killer” and his objective is to eliminate the other players who are “prisoners.” The prisoners are trying to escape through a procedurally generated dungeon. The killer is attempting to eliminate the prisoners via the use of “traps” that he can place in the various dungeon rooms. The killer will be able to place different kinds of traps in each of the generated dungeon rooms. Every turn, all the prisoners must select a room to enter, and the killer will place a number of traps. If the chosen room is trapped, that prisoner will be killed. The prisoners will be able to pick up items that will counter certain traps, allowing them to proceed to the goal.</div>
+    </div>
 
 </body>
+
+<!-- Bootstrap and Angular depend on jQuery, so lets add it here -->
+<script src="https://code.jquery.com/jquery-1.12.0.js"></script>
+
+<!-- Latest compiled and minified Bootstrap JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+
+<script>
+
+// Instantiate the myApp Angular application that we attached to out html tag
+    var app = angular.module("myApp", []);
+app.controller("mainController", ['$scope','$http',function($scope, $http){ }]);
+// Here is the Javascript for our controller which we linked (scoped) to the body tag
+</script>
 </html>
