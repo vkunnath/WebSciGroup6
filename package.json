@@ -1,0 +1,27 @@
+{
+  "name": "Every_Man_For_Himself",
+  "version": "0.0.1",
+  "description": "Nodejs multiplayer game",
+  "main": "server.js",
+  "dependencies": {
+    "express": "^4.10.2",
+    "http": "*",
+    "socket.io": "*"
+
+  },
+  "scripts":{
+    "start": "node server.js",
+    "test": "ECHO 'No test file'; exit 1;"
+  },
+  "engines": {
+    "node": "6.9.5"
+  },
+  "author":{
+    "name": "Web Science Group 6",
+    "email": "bthorne3@gmail.com"
+  },
+  "repository" : "https://github.com/thornb/",
+  "license" : "MIT"
+
+  
+}
