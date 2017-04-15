@@ -2,7 +2,7 @@
 
 <!-- Initialize the app with ng-app directive -->
 
-<html ng-app="myApp">
+<html>
 
 <head>
         <!-- these 3 meta tage are for Bootstrap -->
@@ -10,13 +10,29 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Every Man For Himself</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.0/angular.js">
-    </script>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+    <!-- needed for bootstrap -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.2/angular.js"></script>
+
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.js"></script> -->
+    <script src="/socket.io/socket.io.js"></script>
+
+    <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+
+
+    <script src="/js/mainController.js"></script>
+
+
 </head>
 
-<body ng-controller="mainController">
+<body ng-app="myApp">
 
+    <div ng-controller="mainController">
 
 <!-- When we click on a button, we set the view -->
     <div class="panel">
@@ -47,10 +63,13 @@
        <div>
             <form action="">
             Enter the room code:
-            <input type="text" name="code">
+            <input type="numer" name="code" ng-model="playerCode">
             <br>
             <br>
-            <input type="submit"value="Join Game">
+            <input type="text" name="playerName" ng-model="playerName">
+            <br>
+            <br>
+            <input type="button" value="Join Game" ng-click="addPlayer()">
        </div>
        <div>
         <p>If you do not have a code, click  to create a new game</p>
@@ -66,17 +85,21 @@
         </div>
         <div>
             <form action="">
+            Enter your nickname:
+            <input type="text" name="trapperUserName" ng-model="trapperUserName">
+            <br>
+
             Enter number of players:
-            <input type="text" name="players">
+            <input type="text" name="players" ng-model="maxPlayers">
             <br>
             Enter number of rounds:
-            <input type="text" name="rounds">
+            <input type="text" name="rounds" ng-model="maxRounds">
             <br>
             Enter number of traps:
-            <input type="text" name="traps">
+            <input type="text" name="traps" ng-model="maxTraps">
             <br>
             <br>
-            <input type="submit"value="Create Game">
+            <input type="button" ng-click="createGame()" value="Create Game">
         </form>
         </div>
 
@@ -86,19 +109,24 @@
         <div>“Every Man for Himself (EMH)” is a web-based multiplayer game where 4-8 players are pitted against each other in order to escape a dungeon. One player is the “killer” and his objective is to eliminate the other players who are “prisoners.” The prisoners are trying to escape through a procedurally generated dungeon. The killer is attempting to eliminate the prisoners via the use of “traps” that he can place in the various dungeon rooms. The killer will be able to place different kinds of traps in each of the generated dungeon rooms. Every turn, all the prisoners must select a room to enter, and the killer will place a number of traps. If the chosen room is trapped, that prisoner will be killed. The prisoners will be able to pick up items that will counter certain traps, allowing them to proceed to the goal.</div>
     </div>
 
+    <!-- Lobby View -->
+    <div id="lobby" ng-show="view==4">
+        <div id="lobbyID">{{lobbyID}}</div>
+        <div id="trapper">Trapper: {{currentTrapper}}</div>
+        <div>Prisoners:</div>
+        <div class="prisoners" ng-repeat="x in currentPrisoners track by $index">{{x}}</div>
+    </div>
+
+    <!-- Error view -->
+    <div id="error" ng-show="view==5">
+        {{errorMsg}}
+    </div>
+
+
+
+</div>
 </body>
 
-<!-- Bootstrap and Angular depend on jQuery, so lets add it here -->
-<script src="https://code.jquery.com/jquery-1.12.0.js"></script>
 
-<!-- Latest compiled and minified Bootstrap JavaScript -->
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
 
-<script>
-
-// Instantiate the myApp Angular application that we attached to out html tag
-    var app = angular.module("myApp", []);
-app.controller("mainController", ['$scope','$http',function($scope, $http){ }]);
-// Here is the Javascript for our controller which we linked (scoped) to the body tag
-</script>
 </html>

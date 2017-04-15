@@ -6,7 +6,7 @@
   "dependencies": {
     "express": "^4.10.2",
     "http": "*",
-    "socket.io": "*"
+    "socket.io": "1.7.3"
 
   },
   "scripts":{
@@ -20,7 +20,7 @@
     "name": "Web Science Group 6",
     "email": "bthorne3@gmail.com"
   },
-  "repository" : "https://github.com/thornb/",
+  "repository" : "https://github.com/vkunnath/WebSciGroup6",
   "license" : "MIT"
 
   
