@@ -6,22 +6,20 @@
   "dependencies": {
     "express": "^4.10.2",
     "http": "*",
+    "mongoose": "^4.9.5",
     "socket.io": "1.7.3"
-
   },
-  "scripts":{
+  "scripts": {
     "start": "node server.js",
     "test": "ECHO 'No test file'; exit 1;"
   },
   "engines": {
     "node": "6.9.5"
   },
-  "author":{
+  "author": {
     "name": "Web Science Group 6",
     "email": "bthorne3@gmail.com"
   },
-  "repository" : "https://github.com/vkunnath/WebSciGroup6",
-  "license" : "MIT"
-
-  
+  "repository": "https://github.com/vkunnath/WebSciGroup6",
+  "license": "MIT"
 }

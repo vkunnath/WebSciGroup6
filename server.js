@@ -2,7 +2,8 @@
 var express = require('express');
 var app = express();
 var http = require('http').Server(app);
-
+var mongoose = require('mongoose');
+mongoose.connect('mongodb://localhost/test');
 
 var server = app.listen(3333, function(){})
 var io = require('socket.io').listen(server);
@@ -22,8 +23,56 @@ app.get('/', function(req, res){
 var globalGameInfo = [];
 
 
+//Database Settings
 
+var killerSchema = mongoose.Schema({
+    data:{
+        type: String,
+        get: function(data){
+            try {
+                return JSON.parse(data);
+            } catch (err){
+                return data;
+            }        
+        },
+        set: function(data){
+            return JSON.stringify(data);
+        }
+    }
+});
 
+var playerSchema = mongoose.Schema({
+    data:{
+        type: String,
+        get: function(data){
+            try {
+                return JSON.parse(data);
+            } catch (err){
+                return data;
+            }        
+        },
+        set: function(data){
+            return JSON.stringify(data);
+        }
+    }
+});
+
+var killerboard = mongoose.model('killerboard', killerSchema);
+var playerboard = mongoose.model('playerboard', playerSchema);
+
+//Database load functions
+
+function loadKillerScore( score, res ){
+  killerboard.create({
+    data : score
+  });
+}
+
+function loadPlayerScore( score, res ){
+  playerboard.create({
+    data : score
+  });
+}
 
 // user connected even handler
 io.sockets.on('connection', function(socket){
