@@ -4,7 +4,9 @@
 /*.score{
   color: red;
 }*/
-
+.numbers{
+  font-size: 50px;
+}
 body {
     background-image: url("../images/black.jpg");
     font-family: 'Press Start 2P', cursive;
@@ -39,8 +41,8 @@ body {
   height: 100px;
   top: 50%;
   left: 50%;
-  margin: -275px;
-  margin-top: -100px;
+  margin: -260px;
+  margin-top: -200px;
   text-align: center;
 }
 
