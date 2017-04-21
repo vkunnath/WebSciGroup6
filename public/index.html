@@ -42,6 +42,7 @@
         <button type="button" class="btn-scary" ng-click="view=1">Join Game</button>
         <button type="button" class="btn-scary" ng-click="view=2">Create Game Page</button>
         <button type="button" class="btn-scary" ng-click="view=3">About</button>
+        <button type="button" class="btn-scary" ng-click="view=6">Leaderboard</button>
     </div>
 
 
@@ -136,7 +137,15 @@
         {{errorMsg}}
     </div>
 
-
+    <!-- Leaderboard view -->
+    <div style="color:red" id="Leaderboard" ng-show="view==6">
+        <p>
+        Highscores:
+        <ol type="1">
+            <li></li>
+        </ol>
+        </p>
+    </div>
 
 </div>
 </body>
