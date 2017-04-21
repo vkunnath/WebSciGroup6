@@ -2,6 +2,8 @@
 // Here is the Javascript for our controller which we linked (scoped) to the body tag
 angular.module("myApp", []).controller("mainController", ['$scope','$http', function($scope, $http){
 
+	//start on home page
+	$scope.view = 0;
 
 	console.log("controller working");
 
@@ -11,22 +13,22 @@ angular.module("myApp", []).controller("mainController", ['$scope','$http', func
 	$scope.numTraps = 7;
 
 	$scope.currentTrapper = "";
+	$scope.currentPrisoners = [];
 
 	//initialize socketIO
 	var socket = io.connect();
 
 
 	//TEST
-	var room = "abc123";
-	socket.on('connect', function(){
-		console.log("connected and sendig room")
-		socket.emit('room', room);
-	});
+	// var room = "abc123";
+	// socket.on('connect', function(){
+	// 	console.log("connected and sending room")
+	// 	socket.emit('room', room);
+	// });
 
-	socket.on("testMsg", function(data){
-		console.log('Incoming message:', data);
-	});
-
+	// socket.on("testMsg", function(data){
+	// 	console.log('Incoming message:', data);
+	// });
 	//TEST
 
 	//when a player joins the current Lobby
@@ -39,6 +41,13 @@ angular.module("myApp", []).controller("mainController", ['$scope','$http', func
 			$scope.currentPrisoners = msg["prisoners"];
 			$scope.lobbyID = msg["lobbyID"];
 
+			//show start game button if we have at least 1 trapper and 1 prisoner
+			console.log("$scope.currentPrisoners.length: " + $scope.currentPrisoners.length);
+			console.log("$scope.playerName: " + $scope.playerName + " $scope.currentTrapper: " + $scope.currentTrapper );
+			if($scope.currentPrisoners.length > 0 && $scope.playerName == $scope.currentTrapper){
+				$scope.showStartGameButton = true;
+			}
+
 			$scope.view = 4;
 		});
 
@@ -46,7 +55,7 @@ angular.module("myApp", []).controller("mainController", ['$scope','$http', func
 
 
 	//current lobby number
-	$scope.currLobby = -1;
+	$scope.lobbyID = -1;
 
 	//socket events
 
@@ -74,39 +83,30 @@ angular.module("myApp", []).controller("mainController", ['$scope','$http', func
 
 		console.log("called create game");
 
-		if($scope.currLobby == -1){
+		if($scope.lobbyID == -1){
 			socket.emit('newGame', { "trapper": $scope.trapperUserName, 
 									 "maxRounds": $scope.maxRounds,
 									 "maxPlayers": $scope.maxPlayers,
 									 "maxTraps": $scope.maxTraps } );	
+			$scope.playerName = $scope.trapperUserName;
 		}
 		else{
 			console.log('Already in lobby');
 		}
-
-
-		//if lobby created server side
-		// socket.on('lobbyCreated', function(msg){
-
-		// 	console.log(msg);
-
-		// 	//switch to lobby view
-		// 	$scope.view = 4;
-
-		// 	$scope.currLobby = msg["lobbyID"];
-
-		// 	$scope.currentTrapper = $scope.trapperUserName;
-
-		// });
 		
-
 	}
 
 	$scope.addPlayer = function(){
-
 		socket.emit('playerEnter', { "lobbyID": $scope.playerCode,
 									 "user_name": $scope.playerName });
+	}
 
+
+	//called when trapper indicates to start the game
+	$scope.playersReady = function(){
+
+		console.log("Asking server to start game");
+		socket.emit('playersReady', {"lobbyID": $scope.lobbyID, "user_name": $scope.playerName });
 
 	}
 

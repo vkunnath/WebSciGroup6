@@ -97,12 +97,12 @@ io.sockets.on('connection', function(socket){
   console.log('a user connected');
 
   //broadcast connected back to the client
-  socket.emit('connected', {message: "Connected to EMFH successfully"})
+  socket.emit('connected', {message: "Connected to EMFH successfully"});
 
   //Host events server-side
   socket.on('newGame', newGame);
   socket.on('playersReady', playersReady);
-  socket.on('timerDone', beginGame);
+  //socket.on('timerDone', beginGame);
   socket.on('nextChoice', nextChoice);
 
   //player events server-side
@@ -185,6 +185,9 @@ io.sockets.on('connection', function(socket){
 
     //send this object to all client plays to signal the start of the game
     io.sockets.in(gameInfo.myLobbyID).emit('startGame', gameInfo);
+
+    beginGame(this.lobbyID);
+
 
   }
 
