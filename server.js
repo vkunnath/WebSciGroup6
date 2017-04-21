@@ -184,16 +184,19 @@ io.sockets.on('connection', function(socket){
     };
 
     //send this object to all client plays to signal the start of the game
-    io.sockets.in(gameInfo.myLobbyID).emit('startGame', gameInfo);
+    io.sockets.in(gameInfo.myLobbyID).emit('startGame');
 
-    beginGame(this.lobbyID);
+    beginGame(gameInfo);
 
 
   }
 
   //starts game by calling game logic function(s)
-  function beginGame(lobbyID){
+  function beginGame(gameInfo){
     console.log("beginning game");
+
+    //send back to clients that we are ready to begin game
+    io.sockets.in(gameInfo.myLobbyID)
 
     //call function that performs game logic
     gameLogic(lobbyID);

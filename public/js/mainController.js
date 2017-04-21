@@ -64,7 +64,6 @@ angular.module("myApp", []).controller("mainController", ['$scope','$http', func
 		console.log(msg);
 	});
 
-	
 
 
 	//When wrong player ID
@@ -76,6 +75,20 @@ angular.module("myApp", []).controller("mainController", ['$scope','$http', func
 		});
 		
 	});	
+
+
+	//when the server says it's ready for game, switch all users to the game view
+	socket.on('startGame', function(msg){
+
+		console.log("revieved startGame");
+		console.log(msg);
+		$scope.$apply(function(){
+			$scope.view = 5;
+			$scope.errorMsg = msg["message"];
+		});
+
+
+	});
 
 
 	//tell server to create new lobby if not already in one
@@ -110,7 +123,12 @@ angular.module("myApp", []).controller("mainController", ['$scope','$http', func
 
 	}
 
+	//called when trapper picks a door
+	$scope.trapperChoice = function(){
 
+		console.log("$scope.trapperDoorChoice: " + $scope.trapperDoorChoice);
+
+	}
 	
 
 
