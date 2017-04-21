@@ -40,10 +40,12 @@
 
 <!-- When we click on a button, we set the view -->
     <div class="panel">
+
         <button type="button" class="btn-danger" ng-click="view=0">Home</button>
         <button type="button" class="btn-danger" ng-click="view=1">Join Game</button>
         <button type="button" class="btn-danger" ng-click="view=2">Create Game Page</button>
         <button type="button" class="btn-danger" ng-click="view=3">About</button>
+        <button type="button" class="btn-danger" ng-click="view=6">Leaderboard</button>
     </div>
 
 
@@ -143,14 +145,22 @@
         {{errorMsg}}
     </div>
 
+    <!-- Leaderboard view -->
+    <div style="color:red" id="Leaderboard" ng-show="view==6">
+        <p>
+        Highscores:
+        <ol type="1">
+            <li></li>
+        </ol>
+        </p>
+    </div>
 
     <!-- Trapper page view -->
-    <div ng-show="view==6">
+    <div ng-show="view==7">
         <button type="button" ng-class="btn-danger" ng-click="trapperChoice()" ng-click="trapperDoorChoice = 'Door1'">Door 1</button>
         <button type="button" ng-class="btn-danger" ng-click="trapperChoice()" ng-click="trapperDoorChoice = 'Door2'">Door 2</button>
         <button type="button" ng-class="btn-danger" ng-click="trapperChoice()" ng-click="trapperDoorChoice = 'Door3'">Door 3</button>
     </div>
-
 
 
 </div>
