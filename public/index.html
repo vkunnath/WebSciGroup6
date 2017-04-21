@@ -11,7 +11,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Every Man For Himself</title>
-    
+
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 
     <!-- needed for bootstrap -->
@@ -29,20 +29,23 @@
     <script src="/js/mainController.js"></script>
     <link rel="stylesheet" href="index.css">
 
+    <!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css?family=Press+Start+2P" rel="stylesheet">
 
 </head>
 
-<body background="black.jpg" ng-app="myApp">
+<body background="black.jpg" ng-app="myApp" style="font-family: 'Press Start 2P', cursive;">
 
     <div ng-controller="mainController">
 
 <!-- When we click on a button, we set the view -->
     <div class="panel">
-        <button type="button" class="btn-scary" ng-click="view=0">Home</button>
-        <button type="button" class="btn-scary" ng-click="view=1">Join Game</button>
-        <button type="button" class="btn-scary" ng-click="view=2">Create Game Page</button>
-        <button type="button" class="btn-scary" ng-click="view=3">About</button>
-        <button type="button" class="btn-scary" ng-click="view=6">Leaderboard</button>
+
+        <button type="button" class="btn-danger" ng-click="view=0">Home</button>
+        <button type="button" class="btn-danger" ng-click="view=1">Join Game</button>
+        <button type="button" class="btn-danger" ng-click="view=2">Create Game Page</button>
+        <button type="button" class="btn-danger" ng-click="view=3">About</button>
+        <button type="button" class="btn-danger" ng-click="view=6">Leaderboard</button>
     </div>
 
 
@@ -56,9 +59,9 @@
             <p  style="color:red">The Interactive multiplayer game where you can escape a killer, or be one</p>
         </div>
         <div>
-            <button type="button" class="btn-scary" ng-click="view=3">How to play</button>
-            <button type="button" class="btn-scary" ng-click="view=1">Join Game</button>
-            <button type="button" class="btn-scary" ng-click="view=2">Create Game</button>
+            <button type="button" class="btn-danger" ng-click="view=3">How to play</button>
+            <button type="button" class="btn-danger" ng-click="view=1">Join Game</button>
+            <button type="button" class="btn-danger" ng-click="view=2">Create Game</button>
         </div>
     </div>
 
@@ -70,17 +73,17 @@
             <br>
             <br>
             <br>
-       </div> 
+       </div>
        <div>
             <form action="" style="color:red">
             Enter the room code:
-            <input type="numer" name="code" ng-model="playerCode">
+            <input type="number" name="code" ng-model="playerCode">
             <br>
             <br>
             <input type="text" name="playerName" ng-model="playerName">
             <br>
             <br>
-            <input type="button" class="btn-scary" value="Join Game" ng-click="addPlayer()">
+            <input type="button" class="btn-danger" value="Join Game" ng-click="addPlayer()">
        </div>
        <div>
         <p style="color:red">If you do not have a code, click  to create a new game</p>
@@ -90,7 +93,7 @@
 
 
     <div ng-show="view==2">
-        <div> 
+        <div>
             <h1 class="blood">Every Man For Himself</h1>
             <br>
             <br>
@@ -114,7 +117,7 @@
             <input type="text" name="traps" ng-model="maxTraps">
             <br>
             <br>
-            <input type="button" class="btn-scary" ng-click="createGame()" value="Create Game">
+            <input type="button" class="btn-danger" ng-click="createGame()" value="Create Game">
         </form>
         </div>
 
@@ -130,6 +133,11 @@
         <div id="trapper" style="color:red">Trapper: {{currentTrapper}}</div>
         <div style="color:red">Prisoners:</div>
         <div style="color:red" class="prisoners" ng-repeat="x in currentPrisoners track by $index">{{x}}</div>
+
+
+        <!-- Button to trigger starting a game -->
+        <button type="button" ng-class="btn-danger" ng-click="playersReady()" ng-if="showStartGameButton">Start Game!</button>
+
     </div>
 
     <!-- Error view -->
