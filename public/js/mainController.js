@@ -17,21 +17,12 @@ angular.module("myApp", []).controller("mainController", ['$scope','$http', func
 	$scope.currentTrapper = "";
 	$scope.currentPrisoners = [];
 
+
+	var choseThisRound = false;
+
 	//initialize socketIO
 	var socket = io.connect();
 
-
-	//TEST
-	// var room = "abc123";
-	// socket.on('connect', function(){
-	// 	console.log("connected and sending room")
-	// 	socket.emit('room', room);
-	// });
-
-	// socket.on("testMsg", function(data){
-	// 	console.log('Incoming message:', data);
-	// });
-	//TEST
 
 	//when a player joins the current Lobby
 	socket.on('playerEnteredLobby', function(msg){
@@ -111,10 +102,24 @@ angular.module("myApp", []).controller("mainController", ['$scope','$http', func
 
 		$scope.killedListStr = "";
 
+		//if anyone dies, prepare string
+		if(msg.length > 0){
+			$scope.killedListStr = "The following prisoners have died: ";			
+		}
+
+		//loop over death array and add players to the string
 		for(var i = 0; i < msg.length; i++){
 			console.log(msg[i]);
 
-			$scope.killedListStr += msg[i] + ", ";
+			$scope.$apply(function(){
+				if(i != msg.length - 1){
+					$scope.killedListStr += msg[i] + ", ";	
+				}
+				else{
+					$scope.killedListStr += msg[i];	
+				}
+			});
+
 
 			if(msg[i] == $scope.playerName){
 				//the current player is dead, display the game over screen
@@ -130,16 +135,29 @@ angular.module("myApp", []).controller("mainController", ['$scope','$http', func
 		console.log('nextTurn');
 		
 		//increment the round number and allow players to input a new choice
-		$scope.currentRound++;
+		$scope.$apply(function(){
+			$scope.currentRound++;
+		});
+
+		choseThisRound = false;
 
 	}); 
 
 
 	//When the server says the game has ended
 	socket.on('endGame', function(msg){
-		console.log('recieved endGame');
+		//display victory screen for winners, gameover for losers
 
-		//display victory screen for winners, gameover for loosers
+		//check if this player's name is in the array
+		for (var i = 0; i < msg["winners"].length; i++) {
+			if(msg["winners"][i] == $scope.playerName){
+
+				//display victory page for the current user
+				window.location.href = 'victory_screen.html';
+
+			}
+		}
+
 
 	});
 
@@ -179,20 +197,26 @@ angular.module("myApp", []).controller("mainController", ['$scope','$http', func
 	//called when trapper picks a door
 	$scope.trapperChoice = function(trapperDoorChoice){
 
-		console.log("$scope.trapperDoorChoice: " + trapperDoorChoice);
+		if(choseThisRound == false){
+			choseThisRound = true;
 
-		var choiceList = [];
-		choiceList.push(trapperDoorChoice);
+			console.log("trapperDoorChoice: " + trapperDoorChoice);
+			socket.emit('trapperChoice', { "trapperChoice": trapperDoorChoice, "lobbyID": $scope.lobbyID });	
+		}
 
-		socket.emit('trapperChoice', { "trapperChoices": choiceList, "lobbyID": $scope.lobbyID });
-
+		
 	}
 
 	$scope.prisonerChoice = function(prisonerDoorChoice){
 
-		console.log("sending prisonerChoice");
-		socket.emit('prisonerChoice', {"name": $scope.playerName, "doorChoice": prisonerDoorChoice, "lobbyID": $scope.lobbyID })
+		if(choseThisRound == false){
+			choseThisRound = true;
 
+			console.log("sending prisonerChoice");
+			socket.emit('prisonerChoice', {"name": $scope.playerName, "doorChoice": prisonerDoorChoice, "lobbyID": $scope.lobbyID })
+	
+		}
+		
 	}
 	
 

@@ -62,13 +62,13 @@ var playerboard = mongoose.model('playerboard', playerSchema);
 
 //Database load functions
 
-function loadKillerScore( score, res ){
+function loadKillerScore( score ){
   killerboard.create({
     data : score
   });
 }
 
-function loadPlayerScore( score, res ){
+function loadPlayerScore( score ){
   playerboard.create({
     data : score
   });
@@ -77,22 +77,6 @@ function loadPlayerScore( score, res ){
 // user connected even handler
 io.sockets.on('connection', function(socket){
   	
-  //TEST
-  // function f1(){
-  //   var room = "abc123";
-  //   console.log("sending to room");
-  //   io.sockets.in(room).emit('testMsg', 'Hello World!');
-  // }
-
-  // socket.on('room', function(room){
-  //   console.log("recieved room, joining");
-  //   socket.join(room);
-
-  //   setTimeout(f1, 3000);
-
-  // });
-  //TEST
-
   // log & brodcast connect event
   console.log('a user connected');
 
@@ -125,14 +109,14 @@ io.sockets.on('connection', function(socket){
   function newGame(data) {
 
     //create unique lobby ID by generating random number
-    //var lobbyID = Math.floor((Math.random() * 99999) + 1);
-    var lobbyID = 1;
+    var lobbyID = Math.floor((Math.random() * 99999) + 1);
 
     //create gameInfo object to store data about current game
     var currGameInfo = {
       "socket":  this.id,
       "trapper": data["trapper"],
-      "trapperChoices": [],
+      "trapperChoice": -1,
+      "trapType": "",
       "maxRounds": data["maxRounds"],
       "maxPlayers": data["maxPlayers"],
       "maxTraps": data["maxTraps"],
@@ -179,12 +163,6 @@ io.sockets.on('connection', function(socket){
   // All players are ready, let the host know
   function playersReady(gameInfo){
 
-    //create object to hold game information
-    // var gameInfo = {
-    //   "socket" : this.id,
-    //   "lobbyID" : this.lobbyID    
-    // };
-
     console.log("gameInfo from playersReady");
     console.log(gameInfo);
 
@@ -204,14 +182,6 @@ io.sockets.on('connection', function(socket){
 
     // get the correct lobby from socket io manager 
 
-    // console.log("In playerEnter");
-    // console.log("data lobbyID");
-    // console.log(data["lobbyID"]);
-
-
-    // console.log("ROOMS1");
-    // console.log(io.sockets.adapter.rooms);
-
     var lobby = io.sockets.adapter.rooms[ data["lobbyID"] ];
 
     //If the lobby was created
@@ -229,7 +199,7 @@ io.sockets.on('connection', function(socket){
 
       //create object of prisoner and thier current choice
       var prisonerObj = { "name": data["user_name"],
-                           "doorChoice": -1, "alive": true } 
+                           "doorChoice": -1, "alive": true, "roundDied": -1 } 
 
       globalGameInfo[data["lobbyID"]]["prisoners"].push(prisonerObj);
 
@@ -272,10 +242,10 @@ io.sockets.on('connection', function(socket){
 
     console.log(globalGameInfo[data["lobbyID"]]);
 
-    globalGameInfo[lobbyID]["trapperChoices"] = data["trapperChoices"]; 
+    globalGameInfo[lobbyID]["trapperChoice"] = data["trapperChoice"]; 
 
-    console.log('globalGameInfo[lobbyID]["trapperChoices"]');
-    console.log(globalGameInfo[lobbyID]["trapperChoices"]);
+    console.log('globalGameInfo[lobbyID]["trapperChoice"]');
+    console.log(globalGameInfo[lobbyID]["trapperChoice"]);
 
     //var lobbyID = data["lobbyID"];
     checker(lobbyID);
@@ -294,7 +264,6 @@ io.sockets.on('connection', function(socket){
     var currPrisoner = data["name"];
     var currPrisonerChoice = data["doorChoice"]; 
 
-
     //Loop over prisoners in the game
     for(var i = 0; i < globalGameInfo[lobbyID]["prisoners"].length; i++ ){
 
@@ -304,16 +273,18 @@ io.sockets.on('connection', function(socket){
         //set the door choice of this user
         globalGameInfo[lobbyID]["prisoners"][i]["doorChoice"] = currPrisonerChoice;
         break;
-      }
+      } 
+
+      console.log("globalGameInfo[data['lobbyID']]['prisoners']['doorChoice']");
+      console.log(globalGameInfo[lobbyID]["prisoners"]["doorChoice"]);
+
 
     }
 
     
 
 
-    console.log("globalGameInfo[data['lobbyID']]['prisoners']['doorChoice']");
-    console.log(globalGameInfo[lobbyID]["prisoners"]["doorChoice"]);
-
+    
     //check if all players chose a door, and see who died
     
     checker(lobbyID);
@@ -328,8 +299,8 @@ io.sockets.on('connection', function(socket){
     console.log("IN CHECKER");
 
     //Check if trapper has made choices
-    if ( globalGameInfo[lobbyID]["trapperChoices"].length == 0 ){
-      console.log("trapperChoices empty");
+    if ( globalGameInfo[lobbyID]["trapperChoice"] == -1 ){
+      console.log("trapperChoice empty");
       return;
     }
 
@@ -339,13 +310,19 @@ io.sockets.on('connection', function(socket){
         console.log("trapper picked but at least 1 prisoner didn't");
         return;
       } else {
-        for(var j = 0; j < globalGameInfo[lobbyID]["trapperChoices"].length; j++){
-          //if prisoner chose a trap door
-          if(globalGameInfo[lobbyID]["trapperChoices"][j] == globalGameInfo[lobbyID]["prisoners"][i]["doorChoice"]){
-            //kill the prisoner
-            console.log("Setting prisoner to dead");
-            globalGameInfo[lobbyID]["prisoners"][i]["alive"] = false;
+        
+        //if prisoner chose a trap door
+        if(globalGameInfo[lobbyID]["trapperChoice"] == globalGameInfo[lobbyID]["prisoners"][i]["doorChoice"]){
+          //kill the prisoner
+          console.log("Setting prisoner to dead");
+          globalGameInfo[lobbyID]["prisoners"][i]["alive"] = false;
+
+          //save when the prisoner died
+          if(globalGameInfo[lobbyID]["prisoners"][i]["roundDied"] == -1){
+            globalGameInfo[lobbyID]["prisoners"][i]["roundDied"] = globalGameInfo[lobbyID]["currentRound"];
           }
+
+
         }
       }
     }
@@ -374,16 +351,65 @@ io.sockets.on('connection', function(socket){
       }
     }
 
+
+
+    //set choices back to default
+    console.log("Before clean up");
+    console.log(globalGameInfo[lobbyID]);
+
+    //reset trapper choices
+    globalGameInfo[lobbyID]["trapperChoice"] = -1;
+    globalGameInfo[lobbyID]["trapType"] = "";
+
+    //reset prisoner choices 
+    for (var i = 0; i < globalGameInfo[lobbyID]["prisoners"].length; i++) {
+      globalGameInfo[lobbyID]["prisoners"][i]["doorChoice"] = -1;
+      globalGameInfo[lobbyID]["prisoners"][i]["itemChoice"] = "";
+    }
+
+    console.log("After clean up");
+    console.log(globalGameInfo[lobbyID]);
+
     //send killed list to all players
     io.sockets.in(lobbyID).emit('playersKilled', killedList);
+
 
     //increment round number
     globalGameInfo[lobbyID]["currentRound"]++;
 
+
     //See if we should end game
     if(globalGameInfo[lobbyID]["currentRound"] > globalGameInfo[lobbyID]["maxRounds"] || allDead){
 
-      io.sockets.in(lobbyID).emit('endGame');
+      var winnerArray = [];
+      //check to see if prisoners or trapper won the game
+      if(killedList.length == globalGameInfo[lobbyID]["prisoners"].length){
+        //in this case the trapper won becasue all players are dead
+
+
+        winnerArray.push(globalGameInfo[lobbyID]["trapper"]);
+      }
+      else{
+        //loop over the prisoners and add the one that are alive
+        for(var i = 0; i < globalGameInfo[lobbyID]["prisoners"]; i++){
+
+          //if the prisoner is alive
+          if(globalGameInfo[lobbyID]["prisoners"][i]["alive"]){
+            //add to the winner array
+            winnerArray.push(globalGameInfo[lobbyID]["prisoners"][i]["name"]);
+          }
+
+        }
+      }
+
+      endGameMsg = { "winners": winnerArray}
+
+      //save trapper's score to the mongo database
+      //loadKillerScore({ "name": globalGameInfo[lobbyID]["trapper"], "round": globalGameInfo[lobbyID]["currentRound"] });
+
+      //loop over the prisoners 
+
+      io.sockets.in(lobbyID).emit('endGame', endGameMsg);
 
     }
     else{

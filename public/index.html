@@ -39,7 +39,7 @@
     <div ng-controller="mainController">
 
 <!-- When we click on a button, we set the view -->
-    <div class="panel">
+    <div>
 
         <button type="button" class="btn-danger" ng-click="view=0">Home</button>
         <button type="button" class="btn-danger" ng-click="view=1">Join Game</button>
@@ -56,7 +56,7 @@
             <br>
             <br>
             <br>
-            <p  style="color:red">The Interactive multiplayer game where you can escape a killer, or be one</p>
+            <p  class="red-text">The Interactive multiplayer game where you can escape a killer, or be one</p>
         </div>
         <div>
             <button type="button" class="btn-danger" ng-click="view=3">How to play</button>
@@ -75,7 +75,7 @@
             <br>
        </div>
        <div>
-            <form action="" style="color:red">
+            <form action="" class="red-text">
             Enter the room code:
             <input type="number" name="code" ng-model="playerCode">
             <br>
@@ -86,7 +86,7 @@
             <input type="button" class="btn-danger" value="Join Game" ng-click="addPlayer()">
        </div>
        <div>
-        <p style="color:red">If you do not have a code, click  to create a new game</p>
+        <p class="red-text">If you do not have a code, click  to create a new game</p>
 
         </div>
     </div>
@@ -99,21 +99,21 @@
             <br>
             <br>
             <br>
-            <p style="color:red">Create Game</p>
+            <p class="red-text">Create Game</p>
         </div>
         <div>
-            <form action="" style="color:red">
-            <p style="color:red"> Enter your nickname:</p>
+            <form action="" class="red-text">
+            <p class="red-text"> Enter your nickname:</p>
             <input type="text" name="trapperUserName" ng-model="trapperUserName">
             <br>
 
-            <p style="color:red">Enter number of players:</p>
+            <p class="red-text">Enter number of players:</p>
             <input type="text" name="players" ng-model="maxPlayers">
             <br>
-            <p style="color:red">Enter number of rounds:</p>
+            <p class="red-text">Enter number of rounds:</p>
             <input type="text" name="rounds" ng-model="maxRounds">
             <br>
-            <p style="color:red">Enter number of traps:</p>
+            <p class="red-text">Enter number of traps:</p>
             <input type="text" name="traps" ng-model="maxTraps">
             <br>
             <br>
@@ -124,15 +124,15 @@
     </div>
 
     <div ng-show="view==3">
-        <div style="color:red">“Every Man for Himself (EMH)” is a web-based multiplayer game where 4-8 players are pitted against each other in order to escape a dungeon. One player is the “killer” and his objective is to eliminate the other players who are “prisoners.” The prisoners are trying to escape through a procedurally generated dungeon. The killer is attempting to eliminate the prisoners via the use of “traps” that he can place in the various dungeon rooms. The killer will be able to place different kinds of traps in each of the generated dungeon rooms. Every turn, all the prisoners must select a room to enter, and the killer will place a number of traps. If the chosen room is trapped, that prisoner will be killed. The prisoners will be able to pick up items that will counter certain traps, allowing them to proceed to the goal.</div>
+        <div class="red-text">“Every Man for Himself (EMH)” is a web-based multiplayer game where 4-8 players are pitted against each other in order to escape a dungeon. One player is the “killer” and his objective is to eliminate the other players who are “prisoners.” The prisoners are trying to escape through a procedurally generated dungeon. The killer is attempting to eliminate the prisoners via the use of “traps” that he can place in the various dungeon rooms. The killer will be able to place different kinds of traps in each of the generated dungeon rooms. Every turn, all the prisoners must select a room to enter, and the killer will place a number of traps. If the chosen room is trapped, that prisoner will be killed. The prisoners will be able to pick up items that will counter certain traps, allowing them to proceed to the goal.</div>
     </div>
 
     <!-- Lobby View -->
     <div id="lobby" ng-show="view==4">
-        <div id="lobbyID" style="color:red">{{lobbyID}}</div>
-        <div id="trapper" style="color:red">Trapper: {{currentTrapper}}</div>
-        <div style="color:red">Prisoners:</div>
-        <div style="color:red" class="prisoners" ng-repeat="x in currentPrisoners track by $index">{{x['name']}}</div>
+        <div id="lobbyID" class="red-text">{{lobbyID}}</div>
+        <div id="trapper" class="red-text">Trapper: {{currentTrapper}}</div>
+        <div class="red-text">Prisoners:</div>
+        <div class="prisoners red-text" ng-repeat="x in currentPrisoners track by $index">{{x['name']}}</div>
 
 
         <!-- Button to trigger starting a game -->
@@ -141,12 +141,12 @@
     </div>
 
     <!-- Error view -->
-    <div style="color:red" id="error" ng-show="view==5">
+    <div class="red-text" id="error" ng-show="view==5">
         {{errorMsg}}
     </div>
 
     <!-- Leaderboard view -->
-    <div style="color:red" id="Leaderboard" ng-show="view==6">
+    <div class="red-text" id="Leaderboard" ng-show="view==6">
         <p>
         Highscores:
         <ol type="1">
@@ -158,7 +158,7 @@
     <!-- Trapper page view -->
     <div ng-show="view==7">
         <div id="roundNumber" class="red-text">Round: {{currentRound}}</div>
-        <div id="killedList">{{killedListStr}}</div>
+        <div id="killedList" class="red-text">{{killedListStr}}</div>
         <button type="button" ng-class="btn-danger" ng-click="trapperChoice(1)">Door 1</button>
         <button type="button" ng-class="btn-danger" ng-click="trapperChoice(2)">Door 2</button>
         <button type="button" ng-class="btn-danger" ng-click="trapperChoice(3)">Door 3</button>
@@ -168,7 +168,7 @@
     <!-- Prisoner page view -->
     <div ng-show="view==8">
         <div id="roundNumber" class="red-text">Round: {{currentRound}}</div>
-        <div id="killedList">{{killedListStr}}</div>
+        <div class="red-text" id="killedList">{{killedListStr}}</div>
         <button type="button" ng-class="btn-danger" ng-click="prisonerChoice(1)">Door 1</button>
         <button type="button" ng-class="btn-danger" ng-click="prisonerChoice(2)">Door 2</button>
         <button type="button" ng-class="btn-danger" ng-click="prisonerChoice(3)">Door 3</button>
