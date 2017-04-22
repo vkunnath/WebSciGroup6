@@ -79,18 +79,19 @@
        </div>
        <div>
             <form action="" style="color:red">
-            Enter the room code:
+            Enter the Room Code:
             <input type="number" name="code" ng-model="playerCode">
             <br>
             <br>
+            Enter Your Nickname:
             <input type="text" name="playerName" ng-model="playerName">
             <br>
             <br>
             <input type="button" class="btn-danger" value="Join Game" ng-click="addPlayer()">
        </div>
        <div>
-        <p style="color:red">If you do not have a code, click  to create a new game</p>
-
+        <br>
+        <p style="color:red">If you do not have a code, click <button type="button" class="btn-danger" ng-click="view=2">Create Game</button></p>
         </div>
     </div>
 
