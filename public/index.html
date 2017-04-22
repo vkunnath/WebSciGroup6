@@ -31,6 +31,9 @@
 
     <!-- Google Fonts -->
 <link href="https://fonts.googleapis.com/css?family=Press+Start+2P" rel="stylesheet">
+    <!-- Font for "Every Man for Himself" -->
+<link href="https://fonts.googleapis.com/css?family=Nosifer" rel="stylesheet">
+
 
 </head>
 
@@ -75,19 +78,22 @@
             <br>
        </div>
        <div>
-            <form action="" class="red-text">
-            Enter the room code:
+
+            <form action="" style="red-text">
+            Enter the Room Code:
             <input type="number" name="code" ng-model="playerCode">
             <br>
             <br>
+            Enter Your Nickname:
             <input type="text" name="playerName" ng-model="playerName">
             <br>
             <br>
             <input type="button" class="btn-danger" value="Join Game" ng-click="addPlayer()">
        </div>
        <div>
-        <p class="red-text">If you do not have a code, click  to create a new game</p>
 
+        <br>
+        <p style="color:red">If you do not have a code, click <button type="button" class="btn-danger" ng-click="view=2">Create Game</button></p>
         </div>
     </div>
 
@@ -146,13 +152,37 @@
     </div>
 
     <!-- Leaderboard view -->
-    <div class="red-text" id="Leaderboard" ng-show="view==6">
-        <p>
-        Highscores:
-        <ol type="1">
-            <li></li>
-        </ol>
-        </p>
+    <div style="color:red" id="Leaderboard" ng-show="view==6">
+      <div class="container">
+        <h2>Basic Table</h2>
+        <p>The .table class adds basic styling (light padding and only horizontal dividers) to a table:</p>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Score</th>
+              <th>Rank</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>John</td>
+              <td>100</td>
+              <td>1</td>
+            </tr>
+            <tr>
+              <td>Mary</td>
+              <td>50</td>
+              <td>2</td>
+            </tr>
+            <tr>
+              <td>July</td>
+              <td>25</td>
+              <td>3</td>
+            </tr>
+          </tbody>
+        </table>
+        </div>
     </div>
 
     <!-- Trapper page view -->
