@@ -102,13 +102,13 @@ io.sockets.on('connection', function(socket){
   //Host events server-side
   socket.on('newGame', newGame);
   socket.on('playersReady', playersReady);
-  //socket.on('timerDone', beginGame);
-  socket.on('nextChoice', nextChoice);
 
   //player events server-side
   socket.on('playerEnter', playerEnter);
-  // socket.on('playerChoice', playerChoice);
-  // socket.on('playerRestart', playerRestart);
+  
+  //player choices
+  socket.on('trapperChoice', trapperChoice);
+  socket.on('prisonerChoice', prisonerChoice);
 
 
   // log disconnect event
@@ -125,17 +125,19 @@ io.sockets.on('connection', function(socket){
   function newGame(data) {
 
     //create unique lobby ID by generating random number
-    var lobbyID = Math.floor((Math.random() * 99999) + 1);
-
+    //var lobbyID = Math.floor((Math.random() * 99999) + 1);
+    var lobbyID = 1;
 
     //create gameInfo object to store data about current game
     var currGameInfo = {
       "socket":  this.id,
       "trapper": data["trapper"],
+      "trapperChoices": [],
       "maxRounds": data["maxRounds"],
       "maxPlayers": data["maxPlayers"],
       "maxTraps": data["maxTraps"],
-      "prisoners": []
+      "prisoners": [],
+      "currentRound": 0
     }
     //add to global gameInfo Array
 
@@ -175,54 +177,19 @@ io.sockets.on('connection', function(socket){
   }
 
   // All players are ready, let the host know
-  function playersReady(lobbyID){
+  function playersReady(gameInfo){
 
     //create object to hold game information
-    var gameInfo = {
-      mySocket : this.id,
-      myLobbyID : this.lobbyID    
-    };
+    // var gameInfo = {
+    //   "socket" : this.id,
+    //   "lobbyID" : this.lobbyID    
+    // };
+
+    console.log("gameInfo from playersReady");
+    console.log(gameInfo);
 
     //send this object to all client plays to signal the start of the game
-    io.sockets.in(gameInfo.myLobbyID).emit('startGame');
-
-    beginGame(gameInfo);
-
-
-  }
-
-  //starts game by calling game logic function(s)
-  function beginGame(gameInfo){
-    console.log("beginning game");
-
-    //send back to clients that we are ready to begin game
-    io.sockets.in(gameInfo.myLobbyID)
-
-    //call function that performs game logic
-    gameLogic(lobbyID);
-
-  }
-
-  //Here we will put the logic of the game. For example seeing if the 
-  function gameLogic(lobbyID){
-
-    console.log("Game logic goes here");
-
-  }
-
-  // Function to check if game should end or go for more rounds
-  function nextChoice(gameInfo){
-
-    //if we are under the max number of rounds
-    if(gameInfo.round < gameInfo.roundLimit){
-
-      //perform game logic
-      gameLogic(lobbyID);
-
-    }
-    else{
-      io.sockets.in(gameInfo.myLobbyID).emit('endGame', gameInfo);
-    }
+    io.sockets.in(gameInfo["lobbyID"]).emit('startGame', {message: "starting game"});
 
   }
 
@@ -259,7 +226,12 @@ io.sockets.on('connection', function(socket){
       //Add to global object 
 
       //@HERE I should check for duplicate name
-      globalGameInfo[data["lobbyID"]]["prisoners"].push(data["user_name"]);
+
+      //create object of prisoner and thier current choice
+      var prisonerObj = { "name": data["user_name"],
+                           "doorChoice": -1, "alive": true } 
+
+      globalGameInfo[data["lobbyID"]]["prisoners"].push(prisonerObj);
 
       data["prisoners"] = globalGameInfo[ data["lobbyID"] ]["prisoners"];
       data["trapper"] = globalGameInfo[ data["lobbyID"] ]["trapper"];
@@ -291,9 +263,113 @@ io.sockets.on('connection', function(socket){
     }
   }
 
-  function playerChoice(data){
+
+  //get trapper choice and update global array
+  function trapperChoice(data){
+
+    console.log(data);
+    var lobbyID = data["lobbyID"].toString();
+
+    console.log(globalGameInfo[data["lobbyID"]]);
+
+    globalGameInfo[lobbyID]["trapperChoices"] = data["trapperChoices"]; 
+
+    console.log('globalGameInfo[lobbyID]["trapperChoices"]');
+    console.log(globalGameInfo[lobbyID]["trapperChoices"]);
+
+    //var lobbyID = data["lobbyID"];
+    checker(lobbyID);
+
+  }
+
+  //firest when a prisoner chooses a door
+  function prisonerChoice(data){
+
+    console.log(data);
+    var lobbyID = data["lobbyID"].toString();
+    console.log(globalGameInfo[lobbyID]);
+
+    var currPrisoner = data["name"];
+    var currPrisonerChoice = data["doorChoice"]; 
 
 
+    //add choice to the global array
+    globalGameInfo[lobbyID]["prisoners"]["doorChoice"] = currPrisonerChoice;
+
+
+    console.log("globalGameInfo[data['lobbyID']]['prisoners']['doorChoice']");
+    console.log(globalGameInfo[data["lobbyID"]]["prisoners"]["doorChoice"]);
+
+    //check if all players chose a door, and see who died
+    
+    var lobbyID = data["lobbyID"];
+    checker(lobbyID);
+
+
+
+  }
+
+  //checks to see if all players 
+  function checker(lobbyID){
+
+    console.log("IN CHECKER");
+
+    //Check if trapper has made choices
+    if ( globalGameInfo[lobbyID]["trapperChoices"].length == 0 ){
+      return;
+    }
+
+    //check if all prisoners made choices. if not return
+    for (var i = 0; i < globalGameInfo[lobbyID]["prisoners"].length; i++) {
+      if (globalGameInfo[lobbyID]["prisoners"][i]["doorChoice"] == -1){
+        return;
+      } else {
+        for(var j = 0; j < globalGameInfo[lobbyID]["trapperChoices"].length; j++){
+          //if prisoner chose a trap door
+          if(globalGameInfo[lobbyID]["trapperChoices"][j] == globalGameInfo[lobbyID]["prisoners"][i]["doorChoice"]){
+            //kill the prisoner
+            globalGameInfo[lobbyID]["prisoners"][i]["alive"] = false;
+          }
+        }
+      }
+    }
+
+    endTurn(lobbyID);
+
+  }
+
+
+  //send out to users who died
+  function endTurn(lobbyID){
+
+    //loop through all prisoners 
+    var killedList = [];
+    var allDead = true;
+    for(var i = 0; i < globalGameInfo[lobbyID]["prisoners"].length; i++){
+
+      if(globalGameInfo[lobbyID]["prisoners"][i] == false){
+        killedList.push(globalGameInfo[lobbyID]["prisoners"][i]["name"]);
+      }
+      else{
+        allDead = false;
+      }
+    }
+
+    //send killed list to all players
+    io.sockets.in(lobbyID).emit('playersKilled', killedList);
+
+    //increment round number
+    globalGameInfo[lobbyID]["currentRound"]++;
+
+    //See if we should end game
+    if(globalGameInfo[lobbyID]["currentRound"] > globalGameInfo[lobbyID]["maxRounds"] || allDead){
+
+      io.sockets.in(lobbyID).emit('endGame');
+
+    }
+    else{
+      io.sockets.in(lobbyID).emit('nextTurn');      
+    }
 
   }
 
