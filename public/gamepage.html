@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- adapted from: https://codepen.io/MariamMassadeh/pen/HDLwu/ -->
+    <script src="http://s.codepen.io/assets/libs/prefixfree.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <title>Game Page</title>
+    <link href="https://fonts.googleapis.com/css?family=Press+Start+2P" rel="stylesheet">
+    <link rel="stylesheet" href="css/gamepage.css">
+    <!-- adapted from https://elrumordelaluz.github.io/csshake/ -->
+    <link rel="stylesheet" type="text/css" href="http://csshake.surge.sh/csshake.min.css">
+    <script src="js/gamepage.js"></script>
+</head>
+
+<body>
+  <h1 class ="blood" style="text-align:center;">
+    Every Man for Himself
+  </h1>
+    <div class='fullscreenDiv'>
+        <div class="center">
+            <div class="shake-slow shake-horizontal">
+              <h1>Choose a Path</h2>
+            </div>
+              <div>
+                  <div class="shake perspective" onclick="openDoor(this)">
+                    <div class="thumb">
+                    </div>
+                  </div>
+                  <div class="shake perspective" onclick="openDoor(this)">
+                    <div class="thumb">
+                    </div>
+                  </div>
+                  <div class="shake perspective" onclick="openDoor(this)">
+                    <div class="thumb">
+                    </div>
+                  </div>
+                  <!-- <button type="button" class="btn btn-secondary">Go Back to Home Screen</button>
+                  <button type="button" class="btn btn-secondary">Replay</button>
+                  <button type="button" class="btn btn-secondary">Access Leaderboard</button> -->
+              </div>
+              <!-- Door labels -->
+              <!-- circles around numbers adapted from http://jsfiddle.net/thirtydot/dQR9T/2637/ -->
+                <div class="row">
+                  <div class="numbers">
+                  <!-- <div class="shake-little"> -->
+                    <div class="col-sm-4">
+                      <div class="shake">
+                        1
+                      </div>
+                    </div>
+                    <div class="col-sm-4">
+                      <div class="shake">
+                        2
+                      </div>
+                    </div>
+                    <div class="col-sm-4">
+                      <div class="shake">
+                        3
+                      </div>
+                    </div>
+                  </div>
+                  <!-- </div> -->
+                </div>
+            </div>
+    </div>​
+    <!-- <div class="example1"> -->
+        <!-- <h3 class ="blood">Every Man for Himself </h3> -->
+    <!-- </div> -->
+    <!-- <div class="score">
+      <br>
+      <br>
+    </div> -->
+    <!-- page content -->
+  </body>
+</html>
