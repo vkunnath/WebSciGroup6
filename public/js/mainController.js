@@ -108,8 +108,13 @@ angular.module("myApp", []).controller("mainController", ['$scope','$http', func
 	socket.on('playersKilled', function(msg){
 		console.log("playersKilled");
 		console.log(msg);
+
+		$scope.killedListStr = "";
+
 		for(var i = 0; i < msg.length; i++){
 			console.log(msg[i]);
+
+			$scope.killedListStr += msg[i] + ", ";
 
 			if(msg[i] == $scope.playerName){
 				//the current player is dead, display the game over screen
@@ -185,7 +190,7 @@ angular.module("myApp", []).controller("mainController", ['$scope','$http', func
 
 	$scope.prisonerChoice = function(prisonerDoorChoice){
 
-
+		console.log("sending prisonerChoice");
 		socket.emit('prisonerChoice', {"name": $scope.playerName, "doorChoice": prisonerDoorChoice, "lobbyID": $scope.lobbyID })
 
 	}

@@ -285,6 +285,8 @@ io.sockets.on('connection', function(socket){
   //firest when a prisoner chooses a door
   function prisonerChoice(data){
 
+    console.log("in prisoner choice");
+
     console.log(data);
     var lobbyID = data["lobbyID"].toString();
     console.log(globalGameInfo[lobbyID]);
@@ -293,16 +295,27 @@ io.sockets.on('connection', function(socket){
     var currPrisonerChoice = data["doorChoice"]; 
 
 
-    //add choice to the global array
-    globalGameInfo[lobbyID]["prisoners"]["doorChoice"] = currPrisonerChoice;
+    //Loop over prisoners in the game
+    for(var i = 0; i < globalGameInfo[lobbyID]["prisoners"].length; i++ ){
+
+      //if this is the user that sent the message
+      if(globalGameInfo[lobbyID]["prisoners"][i]["name"] == currPrisoner){
+        
+        //set the door choice of this user
+        globalGameInfo[lobbyID]["prisoners"][i]["doorChoice"] = currPrisonerChoice;
+        break;
+      }
+
+    }
+
+    
 
 
     console.log("globalGameInfo[data['lobbyID']]['prisoners']['doorChoice']");
-    console.log(globalGameInfo[data["lobbyID"]]["prisoners"]["doorChoice"]);
+    console.log(globalGameInfo[lobbyID]["prisoners"]["doorChoice"]);
 
     //check if all players chose a door, and see who died
     
-    var lobbyID = data["lobbyID"];
     checker(lobbyID);
 
 
@@ -316,18 +329,21 @@ io.sockets.on('connection', function(socket){
 
     //Check if trapper has made choices
     if ( globalGameInfo[lobbyID]["trapperChoices"].length == 0 ){
+      console.log("trapperChoices empty");
       return;
     }
 
     //check if all prisoners made choices. if not return
     for (var i = 0; i < globalGameInfo[lobbyID]["prisoners"].length; i++) {
       if (globalGameInfo[lobbyID]["prisoners"][i]["doorChoice"] == -1){
+        console.log("trapper picked but at least 1 prisoner didn't");
         return;
       } else {
         for(var j = 0; j < globalGameInfo[lobbyID]["trapperChoices"].length; j++){
           //if prisoner chose a trap door
           if(globalGameInfo[lobbyID]["trapperChoices"][j] == globalGameInfo[lobbyID]["prisoners"][i]["doorChoice"]){
             //kill the prisoner
+            console.log("Setting prisoner to dead");
             globalGameInfo[lobbyID]["prisoners"][i]["alive"] = false;
           }
         }
@@ -342,12 +358,15 @@ io.sockets.on('connection', function(socket){
   //send out to users who died
   function endTurn(lobbyID){
 
+
+    console.log("In end turn");
+
     //loop through all prisoners 
     var killedList = [];
     var allDead = true;
     for(var i = 0; i < globalGameInfo[lobbyID]["prisoners"].length; i++){
 
-      if(globalGameInfo[lobbyID]["prisoners"][i] == false){
+      if(globalGameInfo[lobbyID]["prisoners"][i]["alive"] == false){
         killedList.push(globalGameInfo[lobbyID]["prisoners"][i]["name"]);
       }
       else{
@@ -372,6 +391,7 @@ io.sockets.on('connection', function(socket){
     }
 
   }
+
 
 
 });
