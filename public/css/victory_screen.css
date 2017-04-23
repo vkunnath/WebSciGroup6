@@ -7,10 +7,10 @@
 
 body {
     background-image: url("../images/black.jpg");
-    font-family: 'Press Start 2P', cursive;
+    font-family: 'Press Start 2P', Arial ;
 }
 .blood {
-       font-family: 'Nosifer', cursive;
+       font-family: 'Nosifer', Arial;
        color:silver;
        text-shadow:
        4px 4px 1px #300000,
