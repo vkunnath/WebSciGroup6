@@ -130,9 +130,10 @@ angular.module("myApp", []).controller("mainController", ['$scope','$http', func
 
 			if(msg[i] == $scope.playerName){
 				//the current player is dead, display the game over screen
-				window.location.href = 'gameover.html';
+				$scope.$apply(function(){
+					$scope.view = 10;
+				});
 			}
-
 		}
 
 	});
@@ -161,13 +162,18 @@ angular.module("myApp", []).controller("mainController", ['$scope','$http', func
 			if(msg["winners"][i] == $scope.playerName){
 
 				//display victory page for the current user
-				window.location.href = 'victory_screen.html';
+				$scope.$apply(function(){
+					$scope.view = 9;	
+				});
+			
 				return;
 			}
 		}
 
 		//if we reach here, they are a loser
-		window.location.href = 'gameover.html';
+		$scope.$apply(function(){
+			$scope.view = 10;
+		});
 
 
 	});

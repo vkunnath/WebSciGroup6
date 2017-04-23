@@ -27,12 +27,14 @@
 
 
     <script src="/js/mainController.js"></script>
-    <link rel="stylesheet" href="/css/index.css">
+    <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" href="css/victory_screen.css">
+    <link rel="stylesheet" href="css/game_over.css">
 
     <!-- Google Fonts -->
-<link href="https://fonts.googleapis.com/css?family=Press+Start+2P" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Press+Start+2P" rel="stylesheet">
     <!-- Font for "Every Man for Himself" -->
-<link href="https://fonts.googleapis.com/css?family=Nosifer" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Nosifer" rel="stylesheet">
 
 
 </head>
@@ -217,6 +219,36 @@
         <button type="button" ng-class="btn-danger" ng-click="prisonerChoice(3)">Door 3</button>
 
         <div id="waitingForNextTurn" ng-if="waitingForNextTurn">Waiting on other players to choose...</div>
+        
+    </div>
+
+    <div class="red-text" ng-show="view==9">
+        <h1 class ="blood" style="text-align:center;">
+          Every Man for Himself
+        </h1>
+        <div class="center">
+            <div id="roundNumber" class="red-text">Round: {{currentRound}}</div>
+            <h1>Congratulations!</h1>
+            <div style="text-align:center;">
+                <button type="button" class="btn-danger" ng-click="view=0">Go Back to Home Screen</button>
+                <button type="button" class="btn-danger" ng-click="view=6">Access Leaderboard</button>
+            </div>
+        </div>​
+        
+    </div>
+
+    <div class="red-text" ng-show="view==10">
+        <h1 class ="blood" style="text-align:center;">
+          Every Man for Himself
+        </h1>
+        <div class="center">
+            <div id="roundNumber" class="red-text">Round: {{currentRound}}</div>
+            <h1>Game Over</h1>
+            <div style="text-align:center;">
+                <button type="button" class="btn-danger" ng-click="view=0">Go Back to Home Screen</button>
+                <button type="button" class="btn-danger" ng-click="view=6">Access Leaderboard</button>
+            </div>
+        </div>
         
     </div>
 
