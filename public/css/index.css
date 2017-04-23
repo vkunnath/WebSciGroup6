@@ -2,6 +2,10 @@
   color:red;
 }
 
+.center-text{
+  text-align: center;
+}
+
 .btn-scary {
   color: #ac2925;
   background-color: #ffffff;
