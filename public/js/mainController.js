@@ -20,6 +20,9 @@ angular.module("myApp", []).controller("mainController", ['$scope','$http', func
 
 	var choseThisRound = false;
 
+	$scope.waitingToStart = false;
+	$scope.waitingForNextTurn = false;
+
 	//initialize socketIO
 	var socket = io.connect();
 
@@ -42,6 +45,10 @@ angular.module("myApp", []).controller("mainController", ['$scope','$http', func
 			console.log("$scope.playerName: " + $scope.playerName + " $scope.currentTrapper: " + $scope.currentTrapper );
 			if($scope.currentPrisoners.length > 0 && $scope.playerName == $scope.currentTrapper){
 				$scope.showStartGameButton = true;
+			}
+
+			if($scope.playerName != $scope.currentTrapper){
+				$scope.waitingToStart = true;
 			}
 
 			$scope.view = 4;
@@ -137,6 +144,7 @@ angular.module("myApp", []).controller("mainController", ['$scope','$http', func
 		//increment the round number and allow players to input a new choice
 		$scope.$apply(function(){
 			$scope.currentRound++;
+			$scope.waitingForNextTurn = false;
 		});
 
 		choseThisRound = false;
@@ -154,10 +162,29 @@ angular.module("myApp", []).controller("mainController", ['$scope','$http', func
 
 				//display victory page for the current user
 				window.location.href = 'victory_screen.html';
-
+				return;
 			}
 		}
 
+		//if we reach here, they are a loser
+		window.location.href = 'gameover.html';
+
+
+	});
+
+
+	//When the server returns database information
+	socket.on('leaderboardInfo', function(msg){
+
+		console.log("leaderboardInfo");
+		console.log(msg);
+
+		msg = JSON.parse(msg);
+
+		$scope.$apply(function(){
+			$scope.killerLeaderboard = msg['killerLeaderboard'];
+			$scope.prisonerLeaderboard = msg['prisonerLeaderboard'];
+		});
 
 	});
 
@@ -202,6 +229,9 @@ angular.module("myApp", []).controller("mainController", ['$scope','$http', func
 
 			console.log("trapperDoorChoice: " + trapperDoorChoice);
 			socket.emit('trapperChoice', { "trapperChoice": trapperDoorChoice, "lobbyID": $scope.lobbyID });	
+			//$scope.$apply(function(){
+				$scope.waitingForNextTurn = true;
+			//});
 		}
 
 		
@@ -214,11 +244,23 @@ angular.module("myApp", []).controller("mainController", ['$scope','$http', func
 
 			console.log("sending prisonerChoice");
 			socket.emit('prisonerChoice', {"name": $scope.playerName, "doorChoice": prisonerDoorChoice, "lobbyID": $scope.lobbyID })
-	
+			
+			//$scope.$apply(function(){
+				$scope.waitingForNextTurn = true;
+			//});
 		}
 		
 	}
-	
+
+	//send messge to server to send back updated leaderboard
+	$scope.refreshLeaderboards = function(){
+		console.log("sending refreshLeaderboards");
+		socket.emit('refreshLeaderboards', $scope.lobbyID);
+
+	}
+
+	//call to get leadboard on first load
+	$scope.refreshLeaderboards();
 
 
 

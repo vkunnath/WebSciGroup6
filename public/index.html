@@ -79,7 +79,7 @@
        </div>
        <div>
 
-            <form action="" style="red-text">
+            <form action="" class="red-text">
             Enter the Room Code:
             <input type="number" name="code" ng-model="playerCode">
             <br>
@@ -93,7 +93,7 @@
        <div>
 
         <br>
-        <p style="color:red">If you do not have a code, click <button type="button" class="btn-danger" ng-click="view=2">Create Game</button></p>
+        <p class="red-text">If you do not have a code, click <button type="button" class="btn-danger" ng-click="view=2">Create Game</button></p>
         </div>
     </div>
 
@@ -113,15 +113,15 @@
             <input type="text" name="trapperUserName" ng-model="trapperUserName">
             <br>
 
-            <p class="red-text">Enter number of players:</p>
+            <!-- <p class="red-text">Enter number of players:</p>
             <input type="text" name="players" ng-model="maxPlayers">
-            <br>
+            <br> -->
             <p class="red-text">Enter number of rounds:</p>
             <input type="text" name="rounds" ng-model="maxRounds">
             <br>
-            <p class="red-text">Enter number of traps:</p>
+            <!-- <p class="red-text">Enter number of traps:</p>
             <input type="text" name="traps" ng-model="maxTraps">
-            <br>
+            <br> -->
             <br>
             <input type="button" class="btn-danger" ng-click="createGame()" value="Create Game">
         </form>
@@ -134,12 +134,13 @@
     </div>
 
     <!-- Lobby View -->
-    <div id="lobby" ng-show="view==4">
+    <div id="lobby" class="red-text" ng-show="view==4">
         <div id="lobbyID" class="red-text">{{lobbyID}}</div>
         <div id="trapper" class="red-text">Trapper: {{currentTrapper}}</div>
         <div class="red-text">Prisoners:</div>
         <div class="prisoners red-text" ng-repeat="x in currentPrisoners track by $index">{{x['name']}}</div>
 
+        <div ng-if="waitingToStart">Waiting for trapper to start game...</div>
 
         <!-- Button to trigger starting a game -->
         <button type="button" ng-class="btn-danger" ng-click="playersReady()" ng-if="showStartGameButton">Start Game!</button>
@@ -152,56 +153,71 @@
     </div>
 
     <!-- Leaderboard view -->
-    <div style="color:red" id="Leaderboard" ng-show="view==6">
+    <div class="red-text" id="Leaderboard" ng-show="view==6">
       <div class="container">
-        <h2>Basic Table</h2>
-        <p>The .table class adds basic styling (light padding and only horizontal dividers) to a table:</p>
-        <table class="table">
+        <h2>Top Trappers:</h2>
+        <table class="table" id="killerTable">
           <thead>
             <tr>
-              <th>Name</th>
-              <th>Score</th>
               <th>Rank</th>
+              <th>Name</th>
+              <th>Round</th>
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>John</td>
-              <td>100</td>
-              <td>1</td>
+            <tr ng-repeat="x in killerLeaderboard track by $index">
+              <td>{{x['rank']}}</td>
+              <td>{{x['name']}}</td>
+              <td>{{x['round']}}</td>
             </tr>
             <tr>
-              <td>Mary</td>
-              <td>50</td>
-              <td>2</td>
-            </tr>
-            <tr>
-              <td>July</td>
-              <td>25</td>
-              <td>3</td>
-            </tr>
           </tbody>
         </table>
-        </div>
+        <br>
+        <h2>Top Prisoners:</h2>
+        <table class="table" id="prisonerTable">
+          <thead>
+            <tr>
+              <th>Rank</th>
+              <th>Name</th>
+              <th>Round</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="x in prisonerLeaderboard track by $index">
+              <td>{{x['rank']}}</td>
+              <td>{{x['name']}}</td>
+              <td>{{x['round']}}</td>
+            </tr>
+            <tr>
+          </tbody>
+        </table>
+      </div>
     </div>
 
     <!-- Trapper page view -->
-    <div ng-show="view==7">
+    <div class="red-text" ng-show="view==7">
         <div id="roundNumber" class="red-text">Round: {{currentRound}}</div>
         <div id="killedList" class="red-text">{{killedListStr}}</div>
         <button type="button" ng-class="btn-danger" ng-click="trapperChoice(1)">Door 1</button>
         <button type="button" ng-class="btn-danger" ng-click="trapperChoice(2)">Door 2</button>
         <button type="button" ng-class="btn-danger" ng-click="trapperChoice(3)">Door 3</button>
+
+        <div id="waitingForNextTurn" ng-if="waitingForNextTurn">Waiting on other players to choose...</div>
+
     </div>
 
 
     <!-- Prisoner page view -->
-    <div ng-show="view==8">
+    <div class="red-text" ng-show="view==8">
         <div id="roundNumber" class="red-text">Round: {{currentRound}}</div>
         <div class="red-text" id="killedList">{{killedListStr}}</div>
         <button type="button" ng-class="btn-danger" ng-click="prisonerChoice(1)">Door 1</button>
         <button type="button" ng-class="btn-danger" ng-click="prisonerChoice(2)">Door 2</button>
         <button type="button" ng-class="btn-danger" ng-click="prisonerChoice(3)">Door 3</button>
+
+        <div id="waitingForNextTurn" ng-if="waitingForNextTurn">Waiting on other players to choose...</div>
+        
     </div>
 
 

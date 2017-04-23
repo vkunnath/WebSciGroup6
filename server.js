@@ -3,7 +3,7 @@ var express = require('express');
 var app = express();
 var http = require('http').Server(app);
 var mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost/test');
+mongoose.connect('mongodb://localhost/EMFH');
 
 var server = app.listen(3333, function(){})
 var io = require('socket.io').listen(server);
@@ -12,12 +12,12 @@ var io = require('socket.io').listen(server);
 //serve html/javascript files
 app.use( express.static(__dirname + '/public' ));
 
-
 // server route handler
 app.get('/', function(req, res){
   res.sendFile(path.join(__dirname, 'public' ,'index.html'));
 })
 
+console.log("server started");
 
 //global array of JSON objects to hold game data
 var globalGameInfo = [];
@@ -63,9 +63,14 @@ var playerboard = mongoose.model('playerboard', playerSchema);
 //Database load functions
 
 function loadKillerScore( score ){
+  
+  console.log("creating killer spot in db");
   killerboard.create({
     data : score
   });
+
+  //var newScore = new killerboard({});
+
 }
 
 function loadPlayerScore( score ){
@@ -93,6 +98,9 @@ io.sockets.on('connection', function(socket){
   //player choices
   socket.on('trapperChoice', trapperChoice);
   socket.on('prisonerChoice', prisonerChoice);
+
+  //return leaderboard
+  socket.on('refreshLeaderboards', refreshLeaderboards);
 
 
   // log disconnect event
@@ -202,7 +210,7 @@ io.sockets.on('connection', function(socket){
       var prisonerObj = { "name": data["user_name"],
                           "doorChoice": -1, 
                           "alive": true, 
-                          "roundDied": -1 } 
+                          "roundDied": 0 } 
 
 
       globalGameInfo[data["lobbyID"]]["prisoners"].push(prisonerObj);
@@ -322,8 +330,8 @@ io.sockets.on('connection', function(socket){
           globalGameInfo[lobbyID]["prisoners"][i]["alive"] = false;
 
           //save when the prisoner died
-          if(globalGameInfo[lobbyID]["prisoners"][i]["roundDied"] == -1){
-            globalGameInfo[lobbyID]["prisoners"][i]["roundDied"] = globalGameInfo[lobbyID]["currentRound"];
+          if(globalGameInfo[lobbyID]["prisoners"][i]["roundDied"] == 0){
+            globalGameInfo[lobbyID]["prisoners"][i]["roundDied"] = globalGameInfo[lobbyID]["currentRound"] + 1;
           }
 
 
@@ -383,7 +391,7 @@ io.sockets.on('connection', function(socket){
 
 
     //See if we should end game
-    if(globalGameInfo[lobbyID]["currentRound"] > globalGameInfo[lobbyID]["maxRounds"] || allDead){
+    if(globalGameInfo[lobbyID]["currentRound"] >= globalGameInfo[lobbyID]["maxRounds"] || allDead){
 
       var winnerArray = [];
       //check to see if prisoners or trapper won the game
@@ -394,8 +402,8 @@ io.sockets.on('connection', function(socket){
         winnerArray.push(globalGameInfo[lobbyID]["trapper"]);
       }
       else{
-        //loop over the prisoners and add the one that are alive
-        for(var i = 0; i < globalGameInfo[lobbyID]["prisoners"]; i++){
+        //loop over the prisoners and add the ones that are alive to winners
+        for(var i = 0; i < globalGameInfo[lobbyID]["prisoners"].length; i++){
 
           //if the prisoner is alive
           if(globalGameInfo[lobbyID]["prisoners"][i]["alive"]){
@@ -408,10 +416,25 @@ io.sockets.on('connection', function(socket){
 
       endGameMsg = { "winners": winnerArray}
 
-      //save trapper's score to the mongo database
-      //loadKillerScore({ "name": globalGameInfo[lobbyID]["trapper"], "round": globalGameInfo[lobbyID]["currentRound"] });
+      //save trapper's score to the mongo database only if they win
+      console.log("adding killerscore to db");
+      if(killedList.length == globalGameInfo[lobbyID]["prisoners"].length){
+        loadKillerScore({ "name": globalGameInfo[lobbyID]["trapper"], "round": globalGameInfo[lobbyID]["currentRound"] });  
+      }
+      
 
-      //loop over the prisoners 
+      //add playerscores to db
+      for(var i=0; i<globalGameInfo[lobbyID]["prisoners"].length; i++){
+          console.log("adding playerscore to db");
+
+          //if the player survived until now, set round died to last round
+          globalGameInfo[lobbyID]["prisoners"][i]["roundDied"] = globalGameInfo[lobbyID]["currentRound"];
+
+
+          loadPlayerScore({ "name": globalGameInfo[lobbyID]["prisoners"][i]["name"], "round": globalGameInfo[lobbyID]["prisoners"][i]["roundDied"] });
+      }
+
+
 
       io.sockets.in(lobbyID).emit('endGame', endGameMsg);
 
@@ -419,6 +442,43 @@ io.sockets.on('connection', function(socket){
     else{
       io.sockets.in(lobbyID).emit('nextTurn');
     }
+
+  }
+
+
+  //send leaderboards
+  function refreshLeaderboards(lobbyID){
+
+    console.log("refreshLeaderboards");
+
+    //get killer leaderboard
+    killerboard.find({}, function(err, killers) {
+      var killerList = [];
+
+      killers.forEach(function(killer) {
+
+        console.log(killer['data']);
+
+        killerList.push(killer["data"]);
+      });
+
+      //get prisoner leaderboard
+      playerboard.find({}, function(err, prisoners){
+
+        var prisonerList = [];
+        prisoners.forEach(function(prisoner){
+          prisonerList.push(prisoner["data"]);
+        });
+
+        var leaderboards = { 'killerLeaderboard': killerList, 'prisonerLeaderboard': prisonerList };
+        leaderboards = JSON.stringify(leaderboards);
+        socket.emit('leaderboardInfo', leaderboards);
+
+      });
+
+       
+    });
+
 
   }
 
