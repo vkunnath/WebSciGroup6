@@ -318,7 +318,7 @@ io.sockets.on('connection', function(socket){
 
     //check if all prisoners made choices. if not return
     for (var i = 0; i < globalGameInfo[lobbyID]["prisoners"].length; i++) {
-      if (globalGameInfo[lobbyID]["prisoners"][i]["doorChoice"] == -1){
+      if (globalGameInfo[lobbyID]["prisoners"][i]["alive"] && globalGameInfo[lobbyID]["prisoners"][i]["doorChoice"] == -1){
         console.log("trapper picked but at least 1 prisoner didn't");
         return;
       } else {

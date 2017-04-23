@@ -282,6 +282,17 @@ angular.module("myApp", []).controller("mainController", ['$scope','$http', func
 	//call to get leadboard on first load
 	$scope.refreshLeaderboards();
 
+	$scope.goToLeaderboard = function(){
+
+
+		//$scope.$apply(function(){
+			$scope.view=6;
+		//});
+
+	$scope.refreshLeaderboards();		
+
+	}
+
 
 
 }]);
