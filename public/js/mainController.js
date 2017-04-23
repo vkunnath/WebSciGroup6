@@ -149,6 +149,8 @@ angular.module("myApp", []).controller("mainController", ['$scope','$http', func
 
 		choseThisRound = false;
 
+		closeAllDoors();
+
 	}); 
 
 
