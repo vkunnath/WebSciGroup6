@@ -161,12 +161,12 @@
             <tr>
               <th>Rank</th>
               <th>Name</th>
-              <th>Round</th>
+              <th>Round Won</th>
             </tr>
           </thead>
           <tbody>
             <tr ng-repeat="x in killerLeaderboard track by $index">
-              <td>{{x['rank']}}</td>
+              <td>{{$index + 1}}</td>
               <td>{{x['name']}}</td>
               <td>{{x['round']}}</td>
             </tr>
@@ -180,12 +180,12 @@
             <tr>
               <th>Rank</th>
               <th>Name</th>
-              <th>Round</th>
+              <th>Rounds Survived</th>
             </tr>
           </thead>
           <tbody>
             <tr ng-repeat="x in prisonerLeaderboard track by $index">
-              <td>{{x['rank']}}</td>
+              <td>{{$index + 1}}</td>
               <td>{{x['name']}}</td>
               <td>{{x['round']}}</td>
             </tr>
