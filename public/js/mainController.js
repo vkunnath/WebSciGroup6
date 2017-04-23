@@ -150,6 +150,8 @@ angular.module("myApp", []).controller("mainController", ['$scope','$http', func
 
 		choseThisRound = false;
 
+		closeAllDoors();
+
 	}); 
 
 
@@ -189,7 +191,19 @@ angular.module("myApp", []).controller("mainController", ['$scope','$http', func
 
 		$scope.$apply(function(){
 			$scope.killerLeaderboard = msg['killerLeaderboard'];
+
+			//sort
+			$scope.killerLeaderboard.sort(function(a, b){
+				return a['round'] - b['round'];
+			});
+
 			$scope.prisonerLeaderboard = msg['prisonerLeaderboard'];
+
+			//sort
+			$scope.prisonerLeaderboard.sort(function(a, b){
+				return b['round'] - a['round'];
+			});
+
 		});
 
 	});
