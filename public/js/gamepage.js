@@ -1,3 +1,7 @@
+//Jquery functions to handle door animations for Every Man for himself game. Created by RPI Webscience group 6 Spring 2017.
+//adapted from: https://codepen.io/MariamMassadeh/pen/HDLwu  
+    
+//funtion that toggles door animations
 function openDoor(field) {
             var y = $(field).find(".thumb");
             var x = y.attr("class");
@@ -10,6 +14,7 @@ function openDoor(field) {
             }
         }
 
+//makes sure is closed
 function closeDoor(field){
 
     var y = $(field).find(".thumb");
@@ -24,6 +29,7 @@ function closeDoor(field){
 
 }
 
+//closes all doors
 function closeAllDoors(){
 
     closeDoor($('tDoor1'));

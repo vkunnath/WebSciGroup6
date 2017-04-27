@@ -1,12 +1,12 @@
-<!DOCTYPE html>
+<!-- HTML page for Every Man for Himself. Created by RPI Webscience group 6 Spring 2017. -->
 
-<!-- Initialize the app with ng-app directive -->
+<!DOCTYPE html>
 
 <html>
 
 <head>
 
-        <!-- these 3 meta tage are for Bootstrap -->
+    <!-- these 3 meta tags are for Bootstrap -->
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -20,7 +20,6 @@
 
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.2/angular.js"></script>
 
-    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.js"></script> -->
     <script src="/socket.io/socket.io.js"></script>
 
     <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
@@ -67,7 +66,14 @@
         <button type="button" class="btn-danger" ng-click="goToLeaderboard()">Leaderboard</button>
     </div>
 
+    <!-- Message to diaplay if page needs to be refreshed -->
+    <div class="row">
+      <div class="col-md-6"></div>
+      <div class="col-md-6 red-text">{{refreshMessage}}</div>
+      <div class="col-md-6"></div>
+    </div>
 
+    <!-- Main page view -->
     <div ng-show="view==0">
         <div class="container center-text">
         <div>
@@ -86,7 +92,7 @@
         </div>
     </div>
 
-
+    <!-- Join game view -->
     <div ng-show="view==1">
         <div class="container center-text">
        <div>
@@ -115,9 +121,13 @@
         <p class="red-text">If you do not have a code, click <button type="button" class="btn-danger" ng-click="view=2">Create Game</button></p>
         </div>
         </div>
+        <br>
+        <div class="red-text" id="duplicateNameError">{{duplicateNameError}}</div>
+        <div class="red-text" id="nameError">{{nameError}}</div>
+
     </div>
 
-
+    <!-- Create game view -->
     <div ng-show="view==2">
         <div class="container center-text">
         <div>
@@ -134,15 +144,10 @@
             <input type="text" name="trapperUserName" ng-model="trapperUserName">
             <br>
 
-            <!-- <p class="red-text">Enter number of players:</p>
-            <input type="text" name="players" ng-model="maxPlayers">
-            <br> -->
             <p class="red-text">Enter number of rounds:</p>
             <input type="text" name="rounds" ng-model="maxRounds">
             <br>
-            <!-- <p class="red-text">Enter number of traps:</p>
-            <input type="text" name="traps" ng-model="maxTraps">
-            <br> -->
+
             <br>
             <input type="button" class="btn-danger" ng-click="createGame()" value="Create Game">
         </form>
@@ -150,6 +155,7 @@
         </div>
     </div>
 
+    <!-- About page view -->
     <div ng-show="view==3">
 
         <div class="container center-text">
@@ -162,42 +168,42 @@
         </div>
 
         <div class="container red-text">
-    <div class="row">
-        <div class="col-xs-2" id="p1">
-          <img src="images/Brandon.png" class="img-rounded" alt="Brandon Thorne" width=auto height="100">
-        </div>
-        <div class="col-xs-2 col-half-offset" id="p2">
-          <img src="images/Corey.png" class="img-rounded" alt="Corey Burns" width=auto height="100">
-        </div>
-        <div class="col-xs-2 col-half-offset" id="p3">
-          <img src="images/Ryan.png" class="img-rounded" alt="Adeel Minhas" width=auto height="100">
-        </div>
-        <div class="col-xs-2 col-half-offset" id="p4">
-          <img src="images/Viv.png" class="img-rounded" alt="Ryan Mackenzie" width=auto height="100">
-        </div>
-        <div class="col-xs-2 col-half-offset" id="p5">
-          <img src="images/Adeel.png" class="img-rounded" alt="Vivek Kunnath" width=auto height="100">
-        </div>
-    </div>
+          <div class="row">
+              <div class="col-xs-2" id="p1">
+                <img src="images/Brandon.png" class="img-rounded" alt="Brandon Thorne" width=auto height="100">
+              </div>
+              <div class="col-xs-2 col-half-offset" id="p2">
+                <img src="images/Corey.png" class="img-rounded" alt="Corey Burns" width=auto height="100">
+              </div>
+              <div class="col-xs-2 col-half-offset" id="p3">
+                <img src="images/Ryan.png" class="img-rounded" alt="Adeel Minhas" width=auto height="100">
+              </div>
+              <div class="col-xs-2 col-half-offset" id="p4">
+                <img src="images/Viv.png" class="img-rounded" alt="Ryan Mackenzie" width=auto height="100">
+              </div>
+              <div class="col-xs-2 col-half-offset" id="p5">
+                <img src="images/Adeel.png" class="img-rounded" alt="Vivek Kunnath" width=auto height="100">
+              </div>
+          </div>
 
-    <div class="row">
-        <div class="col-xs-2" id="p1">
-          Brandon
-        </div>
-        <div class="col-xs-2 col-half-offset" id="p2">
-          Corey
-        </div>
-        <div class="col-xs-2 col-half-offset" id="p3">
-          Ryan
-        </div>
-        <div class="col-xs-2 col-half-offset" id="p4">
-          Viv
-        </div>
-        <div class="col-xs-2 col-half-offset" id="p5">
-          Adeel
-        </div>
-    </div>
-</div>
+          <div class="row">
+              <div class="col-xs-2" id="p1">
+                Brandon
+              </div>
+              <div class="col-xs-2 col-half-offset" id="p2">
+                Corey
+              </div>
+              <div class="col-xs-2 col-half-offset" id="p3">
+                Ryan
+              </div>
+              <div class="col-xs-2 col-half-offset" id="p4">
+                Viv
+              </div>
+              <div class="col-xs-2 col-half-offset" id="p5">
+                Adeel
+              </div>
+          </div>
+      </div>
     </div>
 
     <!-- Lobby View -->
@@ -283,6 +289,8 @@
     </div>
 
     <!-- Trapper page view -->
+    <!-- CSS shaking of elements adapted from: https://elrumordelaluz.github.io/csshake/ -->
+    <!-- Door animations adapted from: https://codepen.io/MariamMassadeh/pen/HDLwu -->
     <div class="red-text center-text" ng-show="view==7">
 
         <div id="roundNumber" class="red-text">Round: {{currentRound}}</div>
@@ -307,15 +315,11 @@
                         <div class="thumb">
                         </div>
                       </div>
-                      <!-- <button type="button" class="btn btn-secondary">Go Back to Home Screen</button>
-                      <button type="button" class="btn btn-secondary">Replay</button>
-                      <button type="button" class="btn btn-secondary">Access Leaderboard</button> -->
                   </div>
                   <!-- Door labels -->
                   <!-- circles around numbers adapted from http://jsfiddle.net/thirtydot/dQR9T/2637/ -->
                     <div class="row">
                       <div class="numbers">
-                      <!-- <div class="shake-little"> -->
                         <div class="col-sm-4">
                           <div class="shake">
                             1
@@ -332,16 +336,11 @@
                           </div>
                         </div>
                       </div>
-                      <!-- </div> -->
                     </div>
                 </div>
         </div>​
 
         <!-- end -->
-
-       <!--  <button type="button" ng-class="btn-danger" ng-click="trapperChoice(1)">Door 1</button>
-        <button type="button" ng-class="btn-danger" ng-click="trapperChoice(2)">Door 2</button>
-        <button type="button" ng-class="btn-danger" ng-click="trapperChoice(3)">Door 3</button> -->
 
         <div id="waitingForNextTurn" ng-if="waitingForNextTurn">Waiting on other players to choose...</div>
 
@@ -349,6 +348,8 @@
 
 
     <!-- Prisoner page view -->
+    <!-- CSS shaking of elements adapted from: https://elrumordelaluz.github.io/csshake/ -->
+    <!-- Door animations adapted from: https://codepen.io/MariamMassadeh/pen/HDLwu -->
     <div class="red-text center-text" ng-show="view==8">
         <div id="roundNumber" class="red-text">Round: {{currentRound}}</div>
 
@@ -372,15 +373,11 @@
                         <div class="thumb">
                         </div>
                       </div>
-                      <!-- <button type="button" class="btn btn-secondary">Go Back to Home Screen</button>
-                      <button type="button" class="btn btn-secondary">Replay</button>
-                      <button type="button" class="btn btn-secondary">Access Leaderboard</button> -->
                   </div>
                   <!-- Door labels -->
                   <!-- circles around numbers adapted from http://jsfiddle.net/thirtydot/dQR9T/2637/ -->
                     <div class="row">
                       <div class="numbers">
-                      <!-- <div class="shake-little"> -->
                         <div class="col-sm-4">
                           <div class="shake">
                             1
@@ -397,23 +394,17 @@
                           </div>
                         </div>
                       </div>
-                      <!-- </div> -->
                     </div>
                 </div>
         </div>​
 
         <!-- end -->
 
-
-        <!-- <div class="red-text" id="killedList">{{killedListStr}}</div>
-        <button type="button" ng-class="btn-danger" ng-click="prisonerChoice(1)">Door 1</button>
-        <button type="button" ng-class="btn-danger" ng-click="prisonerChoice(2)">Door 2</button>
-        <button type="button" ng-class="btn-danger" ng-click="prisonerChoice(3)">Door 3</button>
- -->
         <div id="waitingForNextTurn" ng-if="waitingForNextTurn">Waiting on other players to choose...</div>
 
     </div>
 
+    <!-- Victory screen view -->
     <div class="red-text center-text" ng-show="view==9">
         <h1 class ="blood" style="text-align:center;">
           Every Man for Himself
@@ -432,6 +423,7 @@
 
     </div>
 
+    <!-- Loser screen view -->
     <div class="red-text center-text" ng-show="view==10">
         <h1 class ="blood" style="text-align:center;">
           Every Man for Himself
