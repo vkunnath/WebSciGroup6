@@ -26,32 +26,6 @@ angular.module("myApp", []).controller("mainController", ['$scope','$http', func
 
 	var alreadyPlayedGame = false;
 
-	//reset the values after a game ends
-	function resetValues(){
-		//start on home page
-		$scope.view = 0;
-
-		//default values for form
-		$scope.maxPlayers = 4;
-		$scope.maxRounds = 5;
-		$scope.maxTraps = 7;
-
-		//$scope.currentRound = 0;
-
-		$scope.currentTrapper = "";
-		$scope.currentPrisoners = [];
-
-
-		var choseThisRound = false;
-
-		$scope.waitingToStart = false;
-		$scope.waitingForNextTurn = false;
-
-		$scope.lobbyID = -1;
-		$scope.playerName = "";
-
-	}
-
 
 	//initialize socketIO
 	var socket = io.connect();
@@ -181,7 +155,7 @@ angular.module("myApp", []).controller("mainController", ['$scope','$http', func
 
 		alreadyPlayedGame = true;
 
-		resetValues();
+		//resetValues();
 		
 		//display victory screen for winners, gameover for losers
 
