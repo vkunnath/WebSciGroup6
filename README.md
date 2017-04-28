@@ -1,4 +1,4 @@
-# WebSciGroup6
+﻿# WebSciGroup6
 
 # Team Members
 - Adeel Minhas
@@ -13,3 +13,5 @@
 Please see the Documentation folder for more information.
 
 Github page can be found at: https://github.com/vkunnath/WebSciGroup6
+
+The application is running on http://45.55.197.195:3333/ as well if you would like to test it there 
